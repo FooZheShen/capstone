@@ -1,0 +1,40 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+```{r}
+bike_sharing_df <- read_csv("raw_seoul_bike_sharing.csv")
+```
+```{r}
+summary(bike_sharing_df)
+dim(bike_sharing_df)
+```
+```{r}
+bike_sharing_df <- bike_sharing_df %>%
+  drop_na('RENTED_BIKE_COUNT')
+
+dim(bike_sharing_df)
+  
+```
+```{r}
+TEMPERATURE_NA <- bike_sharing_df %>% 
+                filter(is.na(TEMPERATURE))
+```
+```{r}
+avg_temp_summer <- bike_sharing_df %>%
+  filter(SEASONS =='Summer')%>%
+  select(TEMPERATURE)%>%
+  summarise(mean(TEMPERATURE, na.rm = TRUE))
+
+print(avg_temp_summer)
+```
+```{r}
+bike_sharing_df <- bike_sharing_df %>%
+  replace_na(TEMPERATURE, avg_temp_summer)
+
+```
+
